@@ -1245,11 +1245,15 @@ export class VirtualScrollerComponent implements OnInit, OnChanges, OnDestroy {
 
     protected calculatePageInfo(scrollPosition: number, dimensions: IDimensions): IPageInfo {
         let scrollPercentage = 0;
+        let scrollBottomPercentage = 1;
+        let arrayStartIndex = 0;
+        let arrayEndIndex = 0;
         if (this.enableUnequalChildrenSizes) {
             const numberOfWrapGroups = Math.ceil(dimensions.itemCount / dimensions.itemsPerWrapGroup);
             let totalScrolledLength = 0;
             let defaultScrollLengthPerWrapGroup = dimensions[this._childScrollDim];
-            for (let i = 0; i < numberOfWrapGroups; ++i) {
+            let i = 0;
+            for (; i < numberOfWrapGroups; ++i) {
                 let childSize = this.wrapGroupDimensions.maxChildSizePerWrapGroup[i] && this.wrapGroupDimensions.maxChildSizePerWrapGroup[i][this._childScrollDim];
                 if (childSize) {
                     totalScrolledLength += childSize;
@@ -1262,14 +1266,32 @@ export class VirtualScrollerComponent implements OnInit, OnChanges, OnDestroy {
                     break;
                 }
             }
+            let j = i + 1;
+            for (; j < numberOfWrapGroups; ++j) {
+                let childSize = this.wrapGroupDimensions.maxChildSizePerWrapGroup[j] && this.wrapGroupDimensions.maxChildSizePerWrapGroup[j][this._childScrollDim];
+                if (childSize) {
+                    totalScrolledLength += childSize;
+                }
+                else {
+                    totalScrolledLength += defaultScrollLengthPerWrapGroup;
+                }
+                if (scrollPosition + dimensions.viewportLength < totalScrolledLength) {
+                    scrollBottomPercentage = j / numberOfWrapGroups;
+                    break;
+                }
+            }
+            
+            arrayStartIndex = i;
+            arrayEndIndex = j
         } else {
             scrollPercentage = scrollPosition / dimensions.scrollLength;
+
+            let startingArrayIndex_fractional = Math.min(Math.max(scrollPercentage * dimensions.pageCount_fractional, 0), dimensions.pageCount_fractional) * dimensions.itemsPerPage;
+            let maxStart = dimensions.itemCount - dimensions.itemsPerPage - 1;
+            arrayStartIndex = Math.min(Math.floor(startingArrayIndex_fractional), maxStart);
+            arrayEndIndex = Math.ceil(startingArrayIndex_fractional) + dimensions.itemsPerPage - 1;
         }
 
-        let startingArrayIndex_fractional = Math.min(Math.max(scrollPercentage * dimensions.pageCount_fractional, 0), dimensions.pageCount_fractional) * dimensions.itemsPerPage;
-
-        let maxStart = dimensions.itemCount - dimensions.itemsPerPage - 1;
-        let arrayStartIndex = Math.min(Math.floor(startingArrayIndex_fractional), maxStart);
         arrayStartIndex -= arrayStartIndex % dimensions.itemsPerWrapGroup; // round down to start of wrapGroup
 
         if (this.stripedTable) {
@@ -1279,7 +1301,6 @@ export class VirtualScrollerComponent implements OnInit, OnChanges, OnDestroy {
             }
         }
 
-        let arrayEndIndex = Math.ceil(startingArrayIndex_fractional) + dimensions.itemsPerPage - 1;
         let endIndexWithinWrapGroup = (arrayEndIndex + 1) % dimensions.itemsPerWrapGroup;
         if (endIndexWithinWrapGroup > 0) {
             arrayEndIndex += dimensions.itemsPerWrapGroup - endIndexWithinWrapGroup; // round up to end of wrapGroup
