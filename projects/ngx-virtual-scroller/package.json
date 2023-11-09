@@ -1,11 +1,11 @@
 {
   "name": "@iharbeck/ngx-virtual-scroller",
-  "version": "16.0.0",
+  "version": "17.0.0",
   "peerDependencies": {
-    "@tweenjs/tween.js": "^20.0.3"
+    "@tweenjs/tween.js": "^21.0.0"
   },
   "devDependencies": {
-    "@tweenjs/tween.js": "^20.0.3"
+    "@tweenjs/tween.js": "^21.0.0"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,8 @@
     "angular",
     "angular 14",
     "angular 15",
-    "angular 16"
+    "angular 16",
+    "angular 17"
   ],
   "contributors": [
     {
@@ -31,7 +32,10 @@
       "name": "Pavel Kukushkin"
     },
     {
-      "name" : "Ingo Harbeck"
+      "name": "Ingo Harbeck"
+    },
+    {
+      "name": "Bernhard Behrendt"
     }
   ],
   "license": "MIT",
