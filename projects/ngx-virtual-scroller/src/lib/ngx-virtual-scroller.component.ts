@@ -87,6 +87,7 @@ export interface IPageInfo {
 export interface IViewport extends IPageInfo {
     padding: number;
     scrollLength: number;
+    scrollbarLength: number;
 }
 
 
@@ -799,15 +800,15 @@ export class VirtualScrollerComponent implements OnInit, OnChanges, OnDestroy {
 
                 let startChanged = itemsArrayModified || viewport.startIndex !== this.previousViewPort.startIndex;
                 let endChanged = itemsArrayModified || viewport.endIndex !== this.previousViewPort.endIndex;
-                let scrollLengthChanged = viewport.scrollLength !== this.previousViewPort.scrollLength;
+                let scrollbarLengthChanged = viewport.scrollbarLength !== this.previousViewPort.scrollbarLength;
                 let paddingChanged = viewport.padding !== this.previousViewPort.padding;
                 let scrollPositionChanged = viewport.scrollStartPosition !== this.previousViewPort.scrollStartPosition || viewport.scrollEndPosition !== this.previousViewPort.scrollEndPosition || viewport.maxScrollPosition !== this.previousViewPort.maxScrollPosition;
 
                 this.previousViewPort = viewport;
 
-                if (scrollLengthChanged) {
-                    this.renderer.setStyle(this.invisiblePaddingElementRef.nativeElement, 'transform', `${this._invisiblePaddingProperty}(${viewport.scrollLength})`);
-                    this.renderer.setStyle(this.invisiblePaddingElementRef.nativeElement, 'webkitTransform', `${this._invisiblePaddingProperty}(${viewport.scrollLength})`);
+                if (scrollbarLengthChanged) {
+                    this.renderer.setStyle(this.invisiblePaddingElementRef.nativeElement, 'transform', `${this._invisiblePaddingProperty}(${viewport.scrollbarLength})`);
+                    this.renderer.setStyle(this.invisiblePaddingElementRef.nativeElement, 'webkitTransform', `${this._invisiblePaddingProperty}(${viewport.scrollbarLength})`);
                 }
 
                 if (paddingChanged) {
@@ -874,7 +875,7 @@ export class VirtualScrollerComponent implements OnInit, OnChanges, OnDestroy {
                         this.zone.run(handleChanged);
                     }
                 } else {
-                    if (maxRunTimes > 0 && (scrollLengthChanged || paddingChanged)) {
+                    if (maxRunTimes > 0 && (scrollbarLengthChanged || paddingChanged)) {
                         this.refresh_internal(false, refreshCompletedCallback, maxRunTimes - 1);
                         return;
                     }
@@ -1324,7 +1325,7 @@ export class VirtualScrollerComponent implements OnInit, OnChanges, OnDestroy {
 
         let pageInfo = this.calculatePageInfo(scrollStartPosition, dimensions);
         let newPadding = this.calculatePadding(pageInfo.startIndexWithBuffer, dimensions);
-        let newScrollLength = dimensions.scrollLength;
+        let newScrollLength = Math.round(dimensions.scrollLength);
 
         return {
             startIndex: pageInfo.startIndex,
@@ -1332,7 +1333,8 @@ export class VirtualScrollerComponent implements OnInit, OnChanges, OnDestroy {
             startIndexWithBuffer: pageInfo.startIndexWithBuffer,
             endIndexWithBuffer: pageInfo.endIndexWithBuffer,
             padding: Math.round(newPadding),
-            scrollLength: Math.round(newScrollLength),
+            scrollLength: newScrollLength,
+            scrollbarLength: newScrollLength + offset,
             scrollStartPosition: pageInfo.scrollStartPosition,
             scrollEndPosition: pageInfo.scrollEndPosition,
             maxScrollPosition: pageInfo.maxScrollPosition
