@@ -17,9 +17,8 @@ import { MultiColListComponent } from './lists/multi-col-list.component';
 import { TableListComponent } from './lists/table-list.component';
 import { VerticalListComponent } from './lists/vertical-list.component';
 
-//import { VirtualScrollerModule, VirtualScrollerDefaultOptions } from 'ngx-virtual-scroller';
 import {HttpClientModule} from "@angular/common/http";
-import {VirtualScrollerModule} from "../../../src/virtual-scroller";
+import {VirtualScrollerModule} from "@iharbeck/ngx-virtual-scroller";
 
 const customDefaultOptions = {
 	scrollThrottlingTime: 0,

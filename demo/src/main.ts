@@ -1,4 +1,4 @@
-import './polyfills.ts';
+import './polyfills';
 
 import * as MenuSpy from 'menuspy';
 
