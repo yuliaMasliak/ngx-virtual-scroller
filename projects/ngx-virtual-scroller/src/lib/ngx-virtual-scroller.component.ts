@@ -22,7 +22,7 @@ import {isPlatformServer} from '@angular/common';
 
 import {CommonModule} from '@angular/common';
 
-import * as tween from '@tweenjs/tween.js'
+import {Tween} from '@tweenjs/tween.js'
 
 export interface VirtualScrollerDefaultOptions {
     checkResizeInterval: number
@@ -740,7 +740,7 @@ export class VirtualScrollerComponent implements OnInit, OnChanges, OnDestroy {
 
     protected padding: number = 0;
     protected previousViewPort: IViewport = <any>{};
-    protected currentTween: tween.Tween<any>;
+    protected currentTween: Tween;
     protected cachedItemsLength: number;
 
     protected disposeScrollHandler: () => void | undefined;
