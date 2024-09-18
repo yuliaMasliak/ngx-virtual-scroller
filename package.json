@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "main": "./dist/ngx-virtual-scroller/bundles/ngx-virtual-scroller.umd.js",
   "module": "./fesm2022/ngx-virtual-scroller.mjs",
-  "typings": "./fesm2022/ngx-virtual-scroller.d.ts"
+  "typings": "./fesm2022/ngx-virtual-scroller.d.ts",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
